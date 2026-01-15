@@ -13,7 +13,8 @@
                        gazebo:=false
                        description_pkg:=franka_description
                        with_sc:=false
-                       no_prefix:=false">
+                       no_prefix:=false
+                       fix_finger:=false">
     <xacro:property name="ee_prefix" default="robot_"/>
     <xacro:unless value="${arm_id == ''}">
       <xacro:property name="ee_prefix" value="${arm_prefix}${arm_id}_" />
@@ -113,22 +114,36 @@
       </collision>
       <xacro:ee-inertials name="rightfinger" />
     </link>
-    <joint name="${ee_prefix}finger_joint1" type="prismatic">
-      <parent link="${ee_prefix}hand" />
-      <child link="${ee_prefix}leftfinger" />
-      <origin xyz="0 0 0.0584" rpy="0 0 0" />
-      <axis xyz="0 1 0" />
-      <limit effort="100" lower="0.0" upper="0.04" velocity="0.2" />
-      <dynamics damping="0.3" />
-    </joint>
-    <joint name="${ee_prefix}finger_joint2" type="prismatic">
-      <parent link="${ee_prefix}hand" />
-      <child link="${ee_prefix}rightfinger" />
-      <origin xyz="0 0 0.0584" rpy="0 0 ${pi}" />
-      <axis xyz="0 1 0" />
-      <limit effort="100" lower="0.0" upper="0.04" velocity="0.2" />
-      <mimic joint="${ee_prefix}finger_joint1" />
-      <dynamics damping="0.3" />
-    </joint>
+    <xacro:if value="$(arg fix_finger)">
+        <joint name="${ee_prefix}finger_joint1" type="fixed">
+          <parent link="${ee_prefix}hand" />
+          <child link="${ee_prefix}leftfinger" />
+          <origin xyz="0 0 0.0584" rpy="0 0 0" />
+        </joint>
+        <joint name="${ee_prefix}finger_joint2" type="fixed">
+          <parent link="${ee_prefix}hand" />
+          <child link="${ee_prefix}rightfinger" />
+          <origin xyz="0 0 0.0584" rpy="0 0 ${pi}" />
+        </joint>
+    </xacro:if>
+    <xacro:unless value="$(arg fix_finger)">
+        <joint name="${ee_prefix}finger_joint1" type="prismatic">
+          <parent link="${ee_prefix}hand" />
+          <child link="${ee_prefix}leftfinger" />
+          <origin xyz="0 0 0.0584" rpy="0 0 0" />
+          <axis xyz="0 1 0" />
+          <limit effort="100" lower="0.0" upper="0.04" velocity="0.2" />
+          <dynamics damping="0.3" />
+        </joint>
+        <joint name="${ee_prefix}finger_joint2" type="prismatic">
+          <parent link="${ee_prefix}hand" />
+          <child link="${ee_prefix}rightfinger" />
+          <origin xyz="0 0 0.0584" rpy="0 0 ${pi}" />
+          <axis xyz="0 1 0" />
+          <limit effort="100" lower="0.0" upper="0.04" velocity="0.2" />
+          <mimic joint="${ee_prefix}finger_joint1" />
+          <dynamics damping="0.3" />
+        </joint>
+    </xacro:unless>
   </xacro:macro>
 </robot>
