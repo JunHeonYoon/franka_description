@@ -101,6 +101,7 @@
           <xacro:property name="arm_id_i" value="${arm_ids_list[i]}" />
           <xacro:property name="robot_prefix_i"
                           value="${robot_prefixes_list[i] if i &lt; len(robot_prefixes_list) else ''}" />
+          <xacro:property name="arm_prefix" value="${'' if robot_prefix_i == '' else robot_prefix_i + '_'}" />
           <xacro:property name="name_stem"
                           value="${(robot_prefix_i + '_' if robot_prefix_i != '' else '') + arm_id_i + '_'}" />
 
@@ -116,19 +117,19 @@
           </xacro:if>
 
           <!-- Cartesian velocity interfaces -->
-          <xacro:general_purpose_io prefix="${name_stem}vx" command_interface="cartesian_velocity" index="0"/>
-          <xacro:general_purpose_io prefix="${name_stem}vy" command_interface="cartesian_velocity" index="1"/>
-          <xacro:general_purpose_io prefix="${name_stem}vz" command_interface="cartesian_velocity" index="2"/>
-          <xacro:general_purpose_io prefix="${name_stem}wx" command_interface="cartesian_velocity" index="3"/>
-          <xacro:general_purpose_io prefix="${name_stem}wy" command_interface="cartesian_velocity" index="4"/>
-          <xacro:general_purpose_io prefix="${name_stem}wz" command_interface="cartesian_velocity" index="5"/>
+          <xacro:general_purpose_io prefix="${arm_prefix}vx" command_interface="cartesian_velocity" index="0"/>
+          <xacro:general_purpose_io prefix="${arm_prefix}vy" command_interface="cartesian_velocity" index="1"/>
+          <xacro:general_purpose_io prefix="${arm_prefix}vz" command_interface="cartesian_velocity" index="2"/>
+          <xacro:general_purpose_io prefix="${arm_prefix}wx" command_interface="cartesian_velocity" index="3"/>
+          <xacro:general_purpose_io prefix="${arm_prefix}wy" command_interface="cartesian_velocity" index="4"/>
+          <xacro:general_purpose_io prefix="${arm_prefix}wz" command_interface="cartesian_velocity" index="5"/>
 
           <!-- Cartesian pose interfaces, in total 16 interfaces -->
-          <xacro:pose_loop name_stem="${name_stem}" i="0"/>
+          <xacro:pose_loop name_stem="${arm_prefix}" i="0"/>
 
           <!-- Elbow command interfaces -->
-          <xacro:general_purpose_io prefix="${name_stem}joint_3_position" command_interface="elbow_command" index="0"/>
-          <xacro:general_purpose_io prefix="${name_stem}joint_4_sign" command_interface="elbow_command" index="1"/>
+          <xacro:general_purpose_io prefix="${arm_prefix}joint_3_position" command_interface="elbow_command" index="0"/>
+          <xacro:general_purpose_io prefix="${arm_prefix}joint_4_sign" command_interface="elbow_command" index="1"/>
 
           <xacro:robot_loop i="${i+1}"/>
         </xacro:unless>

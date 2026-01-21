@@ -76,7 +76,7 @@
 
         <xacro:franka_arm
           arm_id="${arm_id_i}"
-          arm_prefix="${arm_prefix}"
+          arm_prefix="${robot_prefix_i}"
           xyz="${xyz_i}"
           rpy="${rpy_i}"
           safety_distance="${safety_distance}"
@@ -109,7 +109,7 @@
           <xacro:franka_hand
             connected_to="${arm_prefix}${connection}"
             arm_id="${arm_id_i}"
-            arm_prefix="${arm_prefix}"
+            arm_prefix="${robot_prefix_i}"
             ee_id="${ee_id}_${ee_color}"
             ee_inertials="${xacro.load_yaml('$(find franka_description)/end_effectors/' + ee_id + '/inertials.yaml')}"
             rpy_ee="${rpy_ee}"
