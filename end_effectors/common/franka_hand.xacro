@@ -17,7 +17,8 @@
                        fix_finger:=false">
     <xacro:property name="ee_prefix" default="robot_"/>
     <xacro:unless value="${arm_id == ''}">
-      <xacro:property name="ee_prefix" value="${arm_prefix}${arm_id}_" />
+      <xacro:property name="arm_prefix_modified" value="${'' if arm_prefix == '' else arm_prefix + '_'}" />
+      <xacro:property name="ee_prefix" value="${arm_prefix_modified}${arm_id}_" />
     </xacro:unless>
     <xacro:unless value="${connected_to == ''}">
       <joint name="${ee_prefix}hand_joint" type="fixed">
