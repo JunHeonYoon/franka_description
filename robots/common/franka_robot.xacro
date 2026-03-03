@@ -63,7 +63,7 @@
       </xacro:if>
       <xacro:property name="connection" value="${special_connection if special_connection != '' else arm_id + '_link8'}" />
       <xacro:franka_hand
-        connected_to="${arm_prefix}_${connection}"
+        connected_to="${(arm_prefix + '_' if arm_prefix != '' else '')}${connection}"
         arm_id="${arm_id}"
         arm_prefix="${arm_prefix}"
         ee_id="${ee_id}_${ee_color}"
@@ -85,7 +85,7 @@
       <xacro:include filename="$(find franka_description)/end_effectors/common/utils.xacro" />
       <xacro:property name="connection" value="${special_connection if special_connection != '' else arm_id + '_link8'}" />
       <xacro:ee_with_one_link
-        connected_to="${arm_prefix}${connection}"
+        connected_to="${(arm_prefix + '_' if arm_prefix != '' else '')}${connection}"
         arm_id="${arm_id}"
         arm_prefix="${arm_prefix}"
         ee_id="${ee_id}"
