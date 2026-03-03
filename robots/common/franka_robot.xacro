@@ -21,6 +21,7 @@
                       gazebo:='false'
                       with_sc:='false'
                       ros2_control:=false
+                      use_mujoco:=false
                       robot_ip:=''
                       use_fake_hardware:=false
                       fake_sensor_commands:=false
@@ -168,6 +169,7 @@
           hand="${hand}"
           gazebo_effort="${gazebo_effort}"
           arm_prefix="${arm_prefix}"
+          use_mujoco="${use_mujoco}"
       />
     </xacro:if>
 
