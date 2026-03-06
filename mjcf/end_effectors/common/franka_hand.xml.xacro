@@ -27,14 +27,14 @@
         <xacro:property name="finger_vis_materials_raw" value="${str(finger_vis_mesh_materials).strip('[]')}" />
 
         <!--  hand body  -->
-        <body name="${ee_prefix}hand" pos="${xyz_ee}" euler="${rpy_ee}">
+        <body name="${ee_prefix}hand" pos="${xyz_ee}" euler="${rpy_ee}" gravcomp="1">
             <xacro:ee_link_with_sc name="hand" prefix="${ee_prefix}" vis_mesh_indices="${hand_vis_mesh_indices}" vis_mesh_materials="${hand_vis_mesh_materials}" />
 
             <!-- TCP site -->
             <site name="${ee_prefix}hand_tcp" pos="${tcp_xyz}" euler="${tcp_rpy}" />
 
             <!-- leftfinger body -->
-            <body name="${ee_prefix}leftfinger" pos="0 0 0.0584" euler="0 0 0">
+            <body name="${ee_prefix}leftfinger" pos="0 0 0.0584" euler="0 0 0" gravcomp="1">
                 <joint name="${ee_prefix}finger_joint1" class="finger" />
                 <xacro:ee-inertial name="leftfinger" />
 
@@ -51,7 +51,7 @@
             </body> <!-- leftfinger -->
 
             <!-- rightfinger body -->
-            <body name="${ee_prefix}rightfinger" pos="0 0 0.0584" euler="0 0 ${pi}">
+            <body name="${ee_prefix}rightfinger" pos="0 0 0.0584" euler="0 0 ${pi}" gravcomp="1">
                 <joint name="${ee_prefix}finger_joint2" class="finger" />
                 <xacro:ee-inertial name="rightfinger" />
 

@@ -20,7 +20,7 @@
         </xacro:unless>
 
         <!-- EE body (child of connected_to body in caller's context) -->
-        <body name="${ee_prefix}${ee_id}" pos="${xyz_ee}" euler="${rpy_ee}">
+        <body name="${ee_prefix}${ee_id}" pos="${xyz_ee}" euler="${rpy_ee}" gravcomp="1">
             <xacro:ee_link_with_sc name="${ee_id}" prefix="${ee_prefix}" vis_mesh_indices="${ee_vis_mesh_indices}" vis_mesh_materials="${ee_vis_mesh_materials}" />
 
             <!-- TCP site -->
