@@ -22,6 +22,7 @@
                       with_sc:='false'
                       ros2_control:=false
                       use_mujoco:=false
+                      mujoco_scene_xacro_path:=''
                       robot_ip:=''
                       use_fake_hardware:=false
                       fake_sensor_commands:=false
@@ -170,6 +171,15 @@
           gazebo_effort="${gazebo_effort}"
           arm_prefix="${arm_prefix}"
           use_mujoco="${use_mujoco}"
+          no_prefix="${no_prefix}"
+          connected_to="${connected_to}"
+          xyz="${xyz}"
+          rpy="${rpy}"
+          ee_id="${ee_id}"
+          xyz_ee="${xyz_ee}"
+          rpy_ee="${rpy_ee}"
+          tcp_xyz="${tcp_xyz}"
+          tcp_rpy="${tcp_rpy}"
       />
     </xacro:if>
 

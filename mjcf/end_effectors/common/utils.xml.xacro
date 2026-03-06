@@ -32,12 +32,29 @@
     <!-- prefix:             Full name prefix                       -->
     <!-- vis_mesh_indices:   List of visual sub-mesh indices        -->
     <!-- ========================================================== -->
+    <!-- Recursive helper to emit visual meshes without xacro:for (not available in Humble) -->
+    <xacro:macro name="emit_ee_visual_meshes" params="geom_prefix geom_name_stem mesh_name_stem vis_indices_raw vis_materials_raw i">
+        <xacro:unless value="${str(vis_indices_raw) == '' or i == len(str(vis_indices_raw).split(','))}">
+            <xacro:property name="idx" value="${str(vis_indices_raw).split(',')[i].strip()}" />
+            <xacro:property name="mat_raw"
+                            value="${(str(vis_materials_raw).split(',')[i].strip().strip(&quot;'&quot;))
+                                    if (str(vis_materials_raw).strip() != '' and i &lt; len(str(vis_materials_raw).split(',')))
+                                    else ''}" />
+            <geom name="${geom_prefix}${geom_name_stem}_${idx}_visual"
+                  type="mesh"
+                  mesh="${mesh_name_stem}_${idx}"
+                  material="${mat_raw if mat_raw != '' else 'white'}"
+                  class="visual" />
+            <xacro:emit_ee_visual_meshes geom_prefix="${geom_prefix}" geom_name_stem="${geom_name_stem}" mesh_name_stem="${mesh_name_stem}" vis_indices_raw="${vis_indices_raw}" vis_materials_raw="${vis_materials_raw}" i="${i+1}" />
+        </xacro:unless>
+    </xacro:macro>
+
     <xacro:macro name="ee_link_with_sc" params="name prefix:=${ee_prefix} vis_mesh_indices:='[0]' vis_mesh_materials:='['']'">
 
-        <!-- Visual mesh geoms: one geom per sub-mesh index -->
-        <xacro:for value="idx" in="${vis_mesh_indices}">
-            <geom name="${prefix}${name}_${idx}_visual" type="mesh" mesh="${name}_${idx}" material="${vis_mesh_materials[idx] if vis_mesh_materials else 'white'}" class="visual" />
-        </xacro:for>
+        <!-- Visual mesh geoms: expand indices with recursion -->
+        <xacro:property name="vis_indices_raw" value="${str(vis_mesh_indices).strip('[]')}" />
+        <xacro:property name="vis_materials_raw" value="${str(vis_mesh_materials).strip('[]')}" />
+        <xacro:emit_ee_visual_meshes geom_prefix="${prefix}" geom_name_stem="${name}" mesh_name_stem="${name}" vis_indices_raw="${vis_indices_raw}" vis_materials_raw="${vis_materials_raw}" i="0" />
 
         <!-- Collision mesh geom: single mesh named {name}_coll -->
         <geom name="${prefix}${name}_coll_collision" type="mesh" mesh="${name}_coll" class="collision" />

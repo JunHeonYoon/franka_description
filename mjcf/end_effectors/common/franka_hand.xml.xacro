@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mujoco xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="utils.xml.xacro" />
 
     <!-- Caution: 'connected_to' do not adapt to MuJoCo, this macro have to put correctly under desired "connected" body -->
     <xacro:macro name="franka_hand"
@@ -22,6 +23,9 @@
             <xacro:property name="ee_prefix" value="${arm_prefix_modified}${arm_id}_" />
         </xacro:unless>
 
+        <xacro:property name="finger_vis_indices_raw" value="${str(finger_vis_mesh_indices).strip('[]')}" />
+        <xacro:property name="finger_vis_materials_raw" value="${str(finger_vis_mesh_materials).strip('[]')}" />
+
         <!--  hand body  -->
         <body name="${ee_prefix}hand" pos="${xyz_ee}" euler="${rpy_ee}">
             <xacro:ee_link_with_sc name="hand" prefix="${ee_prefix}" vis_mesh_indices="${hand_vis_mesh_indices}" vis_mesh_materials="${hand_vis_mesh_materials}" />
@@ -35,9 +39,7 @@
                 <xacro:ee-inertial name="leftfinger" />
 
                 <!-- Visual mesh geoms -->
-                <xacro:for value="idx" in="${finger_vis_mesh_indices}">
-                    <geom name="${ee_prefix}leftfinger_${idx}_visual" type="mesh" mesh="finger_${idx}" material="${finger_vis_mesh_materials[idx] if finger_vis_mesh_materials else 'white'}" class="visual" />
-                </xacro:for>
+                <xacro:emit_ee_visual_meshes geom_prefix="${ee_prefix}" geom_name_stem="leftfinger" mesh_name_stem="finger" vis_indices_raw="${finger_vis_indices_raw}" vis_materials_raw="${finger_vis_materials_raw}" i="0" />
 
                 <!-- Collision geoms -->
                 <geom type="box" size="0.0085 0.004 0.0085" pos="0 0.0055 0.0445"/>
@@ -54,9 +56,7 @@
                 <xacro:ee-inertial name="rightfinger" />
 
                 <!-- Visual mesh geoms -->
-                <xacro:for value="idx" in="${finger_vis_mesh_indices}">
-                    <geom name="${ee_prefix}rightfinger_${idx}_visual" type="mesh" mesh="finger_${idx}" material="${finger_vis_mesh_materials[idx] if finger_vis_mesh_materials else 'white'}" class="visual" />
-                </xacro:for>
+                <xacro:emit_ee_visual_meshes geom_prefix="${ee_prefix}" geom_name_stem="rightfinger" mesh_name_stem="finger" vis_indices_raw="${finger_vis_indices_raw}" vis_materials_raw="${finger_vis_materials_raw}" i="0" />
 
                 <!-- Collision geoms -->
                 <geom type="box" size="0.0085 0.004 0.0085" pos="0 0.0055 0.0445"/>

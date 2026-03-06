@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mujoco xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="utils.xml.xacro" />
 
     <xacro:macro name="ee_with_one_link"
                 params="arm_id arm_prefix:=''

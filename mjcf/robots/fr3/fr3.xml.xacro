@@ -8,7 +8,10 @@
 
     <!-- ── xacro includes ── -->
     <xacro:include filename="$(find franka_description)/mjcf/robots/common/franka_robot.xml.xacro" />
+    <xacro:include filename="$(find franka_description)/mjcf/robots/common/franka_arm.xml.xacro" />
     <xacro:include filename="$(find franka_description)/mjcf/robots/common/franka_arm_actuator.xml.xacro" />
+    <xacro:include filename="$(find franka_description)/mjcf/end_effectors/common/franka_hand.xml.xacro" />
+    <xacro:include filename="$(find franka_description)/mjcf/end_effectors/common/ee_with_one_link.xml.xacro" />
     <xacro:include filename="$(find franka_description)/mjcf/end_effectors/common/franka_hand_actuator.xml.xacro" />
 
     <!-- ── xacro args (overridable at parse time) ── -->
@@ -47,9 +50,9 @@
         <global azimuth="150" elevation="-20" />
     </visual>
 
-    <!-- ── Default classes (레퍼런스 MJCF와 동일) ── -->
+    <!-- Default classes -->
     <default>
-        <default class="${arg arm_id}">
+        <default class="$(arg arm_id)">
             <joint armature="0.1" damping="1"/>
             <position inheritrange="1"/>
             <default class="visual">
@@ -91,8 +94,8 @@
         <mesh name="link0_4" file="robot_arms/fr3/visual/link0_4.obj"/>
         <mesh name="link0_5" file="robot_arms/fr3/visual/link0_5.obj"/>
         <mesh name="link0_6" file="robot_arms/fr3/visual/link0_6.obj"/>
-        <mesh name="link1_0" file="robot_arms/fr3/visual/link1_0.obj"/>
-        <mesh name="link2_0" file="robot_arms/fr3/visual/link2_0.obj"/>
+        <mesh name="link1_0" file="robot_arms/fr3/visual/link1.obj"/>
+        <mesh name="link2_0" file="robot_arms/fr3/visual/link2.obj"/>
         <mesh name="link3_0" file="robot_arms/fr3/visual/link3_0.obj"/>
         <mesh name="link3_1" file="robot_arms/fr3/visual/link3_1.obj"/>
         <mesh name="link4_0" file="robot_arms/fr3/visual/link4_0.obj"/>
@@ -124,16 +127,16 @@
         <mesh name="link7_coll" file="robot_arms/fr3/collision/link7.stl"/>
 
         <!-- hand visual meshes -->
-        <mesh name="hand_0"   file="robot_ee/franka_hand/visual/hand_0.obj"/>
-        <mesh name="hand_1"   file="robot_ee/franka_hand/visual/hand_1.obj"/>
-        <mesh name="hand_2"   file="robot_ee/franka_hand/visual/hand_2.obj"/>
-        <mesh name="hand_3"   file="robot_ee/franka_hand/visual/hand_3.obj"/>
-        <mesh name="hand_4"   file="robot_ee/franka_hand/visual/hand_4.obj"/>
-        <mesh name="finger_0" file="robot_ee/franka_hand/visual/finger_0.obj"/>
-        <mesh name="finger_1" file="robot_ee/franka_hand/visual/finger_1.obj"/>
+        <mesh name="hand_0"   file="robot_ee/franka_hand_white/visual/hand_0.obj"/>
+        <mesh name="hand_1"   file="robot_ee/franka_hand_white/visual/hand_1.obj"/>
+        <mesh name="hand_2"   file="robot_ee/franka_hand_white/visual/hand_2.obj"/>
+        <mesh name="hand_3"   file="robot_ee/franka_hand_white/visual/hand_3.obj"/>
+        <mesh name="hand_4"   file="robot_ee/franka_hand_white/visual/hand_4.obj"/>
+        <mesh name="finger_0" file="robot_ee/franka_hand_white/visual/finger_0.obj"/>
+        <mesh name="finger_1" file="robot_ee/franka_hand_white/visual/finger_1.obj"/>
 
         <!-- hand collision meshes -->
-        <mesh name="hand_coll" file="robot_ee/franka_hand/collision/hand.stl"/>
+        <mesh name="hand_coll" file="robot_ee/franka_hand_white/collision/hand.stl"/>
     </asset>
 
     <!-- ── Worldbody ── -->

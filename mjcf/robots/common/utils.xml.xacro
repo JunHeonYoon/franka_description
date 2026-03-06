@@ -31,13 +31,30 @@
     <!-- vis_mesh_indices:    List of visual sub-mesh indices       -->
     <!-- with_accelerometers: Include accelerometer sites           -->
     <!-- ========================================================== -->
+    <!-- Recursive helper to emit visual meshes without xacro:for (not available in Humble) -->
+    <xacro:macro name="emit_visual_meshes" params="prefix name vis_indices_raw vis_materials_raw i">
+        <xacro:unless value="${str(vis_indices_raw) == '' or i == len(str(vis_indices_raw).split(','))}">
+            <xacro:property name="idx" value="${str(vis_indices_raw).split(',')[i].strip()}" />
+            <xacro:property name="mat_raw"
+                            value="${(str(vis_materials_raw).split(',')[i].strip().strip(&quot;'&quot;))
+                                    if (str(vis_materials_raw).strip() != '' and i &lt; len(str(vis_materials_raw).split(',')))
+                                    else ''}" />
+            <geom name="${prefix}${name}_${idx}_visual"
+                  material="${mat_raw if mat_raw != '' else 'white'}"
+                  type="mesh"
+                  mesh="${name}_${idx}"
+                  class="visual" />
+            <xacro:emit_visual_meshes prefix="${prefix}" name="${name}" vis_indices_raw="${vis_indices_raw}" vis_materials_raw="${vis_materials_raw}" i="${i+1}" />
+        </xacro:unless>
+    </xacro:macro>
+
     <xacro:macro name="link_with_sc" params="name no_prefix:='false' vis_mesh_indices:='[]' vis_mesh_materials:='['']' with_accelerometers:=false">
         <xacro:property name="prefix" value="${'' if no_prefix else (arm_id + '_' if arm_prefix == '' else arm_prefix + '_' + arm_id + '_')}" />
         
-        <!-- Visual mesh geoms: one geom per sub-mesh index -->
-        <xacro:for value="idx" in="${vis_mesh_indices}">
-            <geom name="${prefix}${name}_${idx}_visual" material="${vis_mesh_materials[idx] if vis_mesh_materials else 'white'}" type="mesh" mesh="${name}_${idx}" class="visual" />
-        </xacro:for>
+        <!-- Visual mesh geoms: expand indices with recursion -->
+        <xacro:property name="vis_indices_raw" value="${str(vis_mesh_indices).strip('[]')}" />
+        <xacro:property name="vis_materials_raw" value="${str(vis_mesh_materials).strip('[]')}" />
+        <xacro:emit_visual_meshes prefix="${prefix}" name="${name}" vis_indices_raw="${vis_indices_raw}" vis_materials_raw="${vis_materials_raw}" i="0" />
 
         <!-- Collision mesh geom: single mesh named {name}_coll -->
         <geom name="${prefix}${name}_collision" type="mesh" mesh="${name}_coll" class="collision" />
@@ -60,10 +77,10 @@
     <!-- ========================================================================= -->
     <xacro:macro name="franka-limits" params="config name">
         <xacro:property name="limits" value="${config[name]['limit']}" lazy_eval="false" />
-        <xacro:property name="franka_lower_${name}"   value="${limits.lower}"    />
-        <xacro:property name="franka_upper_${name}"   value="${limits.upper}"    />
-        <xacro:property name="franka_effort_${name}"  value="${limits.effort}"   />
-        <xacro:property name="franka_velocity_${name}" value="${limits.velocity}" />
+        <xacro:property name="franka_lower_${name}"   value="${limits.lower}"    scope="parent" />
+        <xacro:property name="franka_upper_${name}"   value="${limits.upper}"    scope="parent" />
+        <xacro:property name="franka_effort_${name}"  value="${limits.effort}"   scope="parent" />
+        <xacro:property name="franka_velocity_${name}" value="${limits.velocity}" scope="parent" />
     </xacro:macro>
 
     <!-- ========================================================================= -->
@@ -75,8 +92,8 @@
     <!-- ========================================================================= -->
     <xacro:macro name="franka-dynamics" params="config name">
         <xacro:property name="dynamics" value="${config[name]['dynamic']}" lazy_eval="false" />
-        <xacro:property name="franka_damping_${name}"  value="${dynamics.damping}"  />
-        <xacro:property name="franka_friction_${name}" value="${dynamics.friction}" />
+        <xacro:property name="franka_damping_${name}"  value="${dynamics.damping}"  scope="parent" />
+        <xacro:property name="franka_friction_${name}" value="${dynamics.friction}" scope="parent" />
     </xacro:macro>
 
     <!-- ========================================================================= -->
@@ -88,8 +105,8 @@
     <!-- ========================================================================= -->
     <xacro:macro name="franka-kinematics" params="config name">
         <xacro:property name="kinematics" value="${config[name]['kinematic']}" lazy_eval="false" />
-        <xacro:property name="franka_kin_pos_${name}"   value="${kinematics.x} ${kinematics.y} ${kinematics.z}"             />
-        <xacro:property name="franka_kin_euler_${name}" value="${kinematics.roll} ${kinematics.pitch} ${kinematics.yaw}"    />
+        <xacro:property name="franka_kin_pos_${name}"   value="${kinematics.x} ${kinematics.y} ${kinematics.z}"             scope="parent" />
+        <xacro:property name="franka_kin_euler_${name}" value="${kinematics.roll} ${kinematics.pitch} ${kinematics.yaw}"    scope="parent" />
     </xacro:macro>
 
     <!-- ================================================================================== -->

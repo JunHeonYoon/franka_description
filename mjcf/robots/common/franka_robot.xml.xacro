@@ -19,7 +19,6 @@
                          no_prefix:=false
                          arm_prefix:=''
                          connected_to:='base'
-                         fix_finger:=false
                          link0_vis_mesh_indices:='[0]'
                          link1_vis_mesh_indices:='[0]'
                          link2_vis_mesh_indices:='[0]'
@@ -41,7 +40,7 @@
                          link7_vis_mesh_materials:='[]'
                          hand_vis_mesh_materials:='[]'
                          finger_vis_mesh_materials:='[]'
-                         ee_vis_mesh_materials">
+                         ee_vis_mesh_materials:='[]'">
 
         <xacro:franka_arm
             arm_id="${arm_id}"
@@ -77,12 +76,11 @@
                         arm_id="${arm_id}"
                         arm_prefix="${arm_prefix}"
                         no_prefix="${no_prefix}"
-                        ee_inertials="${xacro.load_yaml('$(find franka_description)/end_effectors/' + ee_id + '/inertials.yaml')}"
+                        ee_inertials="${xacro.load_yaml('$(find franka_description)/mjcf/end_effectors/' + ee_id + '/inertials.yaml')}"
                         xyz_ee="${xyz_ee}"
                         rpy_ee="${rpy_ee}"
                         tcp_xyz="${tcp_xyz}"
                         tcp_rpy="${tcp_rpy}"
-                        fix_finger="${fix_finger}"
                         hand_vis_mesh_indices="${hand_vis_mesh_indices}"
                         finger_vis_mesh_indices="${finger_vis_mesh_indices}"
                         hand_vis_mesh_materials="${hand_vis_mesh_materials}"
@@ -94,7 +92,7 @@
                         arm_id="${arm_id}"
                         arm_prefix="${arm_prefix}"
                         ee_id="${ee_id}"
-                        ee_inertials="${xacro.load_yaml('$(find franka_description)/end_effectors/' + ee_id + '/inertials.yaml')}"
+                        ee_inertials="${xacro.load_yaml('$(find franka_description)/mjcf/end_effectors/' + ee_id + '/inertials.yaml')}"
                         xyz_ee="${xyz_ee}"
                         rpy_ee="${rpy_ee}"
                         tcp_xyz="${tcp_xyz}"

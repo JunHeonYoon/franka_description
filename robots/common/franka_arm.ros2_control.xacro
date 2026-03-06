@@ -10,7 +10,17 @@
                  hand:=false
                  gazebo_effort:=false
                  arm_prefix:=''
-                 use_mujoco:=false">
+                 no_prefix:='false'
+                 use_mujoco:=false
+                 connected_to:='base'
+                 xyz:='0 0 0'
+                 rpy:='0 0 0'
+                 ee_id:=none
+                 xyz_ee:='0 0 0'
+                 rpy_ee:='0 0 0'
+                 tcp_xyz:='0 0 0'
+                 tcp_rpy:='0 0 0'
+                 mujoco_scene_xacro_path:=''">
 
     <xacro:property name="arm_prefix_modified" value="${'' if arm_prefix == '' else arm_prefix + '_'}" />
     <ros2_control name="${arm_prefix_modified}FrankaHardwareInterface" type="system">
@@ -31,6 +41,20 @@
 
           <xacro:if value="${use_mujoco}">
             <plugin>franka_mujoco/FrankaMujocoSystem</plugin>
+            <param name="mujoco_scene_xacro_path">$(arg mujoco_scene_xacro_path)</param>
+            <param name="enable_viewer">true</param>
+            <param name="arm_id">${arm_id}</param>
+            <param name="arm_prefix">${arm_prefix}</param>
+            <param name="no_prefix">${no_prefix}</param>
+            <param name="connected_to">${connected_to}</param>
+            <param name="xyz">${xyz}</param>
+            <param name="rpy">${rpy}</param>
+            <param name="hand">${hand}</param>
+            <param name="ee_id">${ee_id}</param>
+            <param name="xyz_ee">${xyz_ee}</param>
+            <param name="rpy_ee">${rpy_ee}</param>
+            <param name="tcp_xyz">${tcp_xyz}</param>
+            <param name="tcp_rpy">${tcp_rpy}</param>
           </xacro:if>
 
           <xacro:if value="${use_fake_hardware == 0 and gazebo == 0 and use_mujoco == 0}">
@@ -43,23 +67,24 @@
       <!-- Joint position, velocity and effort interfaces -->
       <xacro:macro name="configure_joint" params="joint_name initial_position">
         <joint name="${joint_name}">
-          <!--
-            deactivated for gazebo velocity and position interface due to a bug
+            <!--
+              deactivated for gazebo velocity and position interface due to a bug
             https://github.com/ros-controls/gz_ros2_control/issues/343
 
             Command Interfaces -->
-          <command_interface name="position"/>
-          <command_interface name="velocity"/>
-          <xacro:if value="${gazebo == 0 or gazebo_effort == 1}">
-            <command_interface name="effort"/>
-          </xacro:if>
+            <command_interface name="position"/>
+            <command_interface name="velocity"/>
+            <xacro:if value="${gazebo == 0 or gazebo_effort == 1}">
+              <command_interface name="effort"/>
+            </xacro:if>
 
           <!-- State Interfaces -->
           <state_interface name="position">
             <param name="initial_value">${initial_position}</param>
           </state_interface>
-          <state_interface name="velocity"/>
+          <state_interface name="velocity">
             <param name="initial_value">0.0</param>
+          </state_interface>
           <state_interface name="effort"/>
         </joint>
       </xacro:macro>
