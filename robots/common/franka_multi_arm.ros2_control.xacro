@@ -3,29 +3,46 @@
 
 <xacro:macro name="franka_multi_arm_ros2_control"
          params="arm_ids
-                 robot_ips
+                 robot_ips:=''
                  robot_prefixes:=''
                  use_fake_hardware:=false
                  fake_sensor_commands:=false
                  gazebo:=false
                  hand:=false
-                 gazebo_effort:=false">
+                 gazebo_effort:=false
+                 use_mujoco:=false
+                 mujoco_scene_xacro_path:=''
+                 xyzs:='0 0 0'
+                 rpys:='0 0 0'
+                 connected_to:='base'
+                 ee_id:=none
+                 xyz_ee:='0 0 0'
+                 rpy_ee:='0 0 0'
+                 tcp_xyz:='0 0 0'
+                 tcp_rpy:='0 0 0'">
 
     <!-- arm_ids/robot_ips/robot_prefixes accept comma or space separated values. -->
     <xacro:property name="arm_ids_list"
                     value="${[x.strip() for x in (arm_ids.split(',') if ',' in arm_ids else arm_ids.split()) if x.strip() != '']}" />
     <xacro:property name="robot_ips_list"
-                    value="${[x.strip() for x in (robot_ips.split(',') if ',' in robot_ips else robot_ips.split()) if x.strip() != '']}" />
+                    value="${[x.strip() for x in (robot_ips.split(',') if ',' in robot_ips else robot_ips.split()) if x.strip() != ''] if robot_ips != '' else []}" />
     <xacro:property name="robot_prefixes_raw"
                     value="${[x.strip() for x in (robot_prefixes.split(',') if ',' in robot_prefixes else robot_prefixes.split()) if x.strip() != '']}" />
     <xacro:property name="robot_prefixes_list"
                     value="${(['' for _ in range(len(arm_ids_list))] if len(robot_prefixes_raw) == 0 else ['' if p in ['','none','null'] else p for p in robot_prefixes_raw])}" />
     <xacro:property name="robot_count" value="${len(arm_ids_list)}" />
 
+    <!-- xyzs/rpys: semicolon-separated, one entry per arm -->
+    <xacro:property name="xyz_list"
+                    value="${[x.strip() for x in xyzs.split(';') if x.strip() != '']}" />
+    <xacro:property name="rpy_list"
+                    value="${[x.strip() for x in rpys.split(';') if x.strip() != '']}" />
+
+    <!-- real-hardware param loop (arm_id, robot_ip, prefix) -->
     <xacro:macro name="robot_param_loop" params="i">
       <xacro:unless value="${i == robot_count}">
         <xacro:property name="arm_id_i" value="${arm_ids_list[i]}" />
-        <xacro:property name="robot_ip_i" value="${robot_ips_list[i]}" />
+        <xacro:property name="robot_ip_i" value="${robot_ips_list[i] if i &lt; len(robot_ips_list) else ''}" />
         <xacro:property name="robot_prefix_i"
                         value="${robot_prefixes_list[i] if i &lt; len(robot_prefixes_list) else ''}" />
         <param name="robot_${i}_arm_id">${arm_id_i}</param>
@@ -37,10 +54,24 @@
       </xacro:unless>
     </xacro:macro>
 
+    <!-- mujoco param loop — outputs hw_params expected by FrankaMultiSubHandler:
+         arm_id_<i>, prefix_<i>, load_gripper_<i> -->
+    <xacro:macro name="mujoco_param_loop" params="i">
+      <xacro:unless value="${i == robot_count}">
+        <xacro:property name="arm_id_i"       value="${arm_ids_list[i]}" />
+        <xacro:property name="robot_prefix_i" value="${robot_prefixes_list[i] if i &lt; len(robot_prefixes_list) else ''}" />
+        <param name="arm_id_${i}">${arm_id_i}</param>
+        <param name="prefix_${i}">${robot_prefix_i}</param>
+        <param name="load_gripper_${i}">${hand}</param>
+        <xacro:mujoco_param_loop i="${i+1}"/>
+      </xacro:unless>
+    </xacro:macro>
+
     <ros2_control name="FrankaMultiHardwareInterface" type="system">
         <hardware>
           <param name="version">0.1.0</param>
           <param name="robot_count">${robot_count}</param>
+
           <xacro:if value="${use_fake_hardware}">
             <plugin>mock_components/GenericSystem</plugin>
             <param name="fake_sensor_commands">${fake_sensor_commands}</param>
@@ -51,11 +82,17 @@
             <plugin>franka_gz_ros2_control/GZSystem</plugin>
           </xacro:if>
 
-          <xacro:if value="${use_fake_hardware == 0 and gazebo == 0}">
-            <plugin>franka_hardware/FrankaMultiHardwareInterface</plugin>
+          <xacro:if value="${use_mujoco}">
+            <plugin>mujoco_ros_hardware/MujocoHardwareInterface</plugin>
+            <param name="robot_type">franka_multi</param>
+            <param name="robot_count">${robot_count}</param>
+            <xacro:mujoco_param_loop i="0"/>
           </xacro:if>
 
-          <xacro:robot_param_loop i="0"/>
+          <xacro:if value="${use_fake_hardware == 0 and gazebo == 0 and use_mujoco == 0}">
+            <plugin>franka_hardware/FrankaMultiHardwareInterface</plugin>
+            <xacro:robot_param_loop i="0"/>
+          </xacro:if>
         </hardware>
 
       <!-- Joint position, velocity and effort interfaces -->
@@ -76,8 +113,9 @@
           <state_interface name="position">
             <param name="initial_value">${initial_position}</param>
           </state_interface>
-          <state_interface name="velocity"/>
+          <state_interface name="velocity">
             <param name="initial_value">0.0</param>
+          </state_interface>
           <state_interface name="effort"/>
         </joint>
       </xacro:macro>
@@ -112,24 +150,26 @@
           <xacro:configure_joint joint_name="${name_stem}joint5" initial_position="0.0"/>
           <xacro:configure_joint joint_name="${name_stem}joint6" initial_position="${pi/2}"/>
           <xacro:configure_joint joint_name="${name_stem}joint7" initial_position="${pi/4}"/>
-          <xacro:if value="${gazebo and hand}">
+          <xacro:if value="${(gazebo or use_mujoco) and hand}">
             <xacro:configure_joint joint_name="${name_stem}finger_joint1" initial_position="0.0" />
           </xacro:if>
 
-          <!-- Cartesian velocity interfaces -->
-          <xacro:general_purpose_io prefix="${arm_prefix}vx" command_interface="cartesian_velocity" index="0"/>
-          <xacro:general_purpose_io prefix="${arm_prefix}vy" command_interface="cartesian_velocity" index="1"/>
-          <xacro:general_purpose_io prefix="${arm_prefix}vz" command_interface="cartesian_velocity" index="2"/>
-          <xacro:general_purpose_io prefix="${arm_prefix}wx" command_interface="cartesian_velocity" index="3"/>
-          <xacro:general_purpose_io prefix="${arm_prefix}wy" command_interface="cartesian_velocity" index="4"/>
-          <xacro:general_purpose_io prefix="${arm_prefix}wz" command_interface="cartesian_velocity" index="5"/>
+          <xacro:unless value="${use_mujoco}">
+            <!-- Cartesian velocity interfaces -->
+            <xacro:general_purpose_io prefix="${arm_prefix}vx" command_interface="cartesian_velocity" index="0"/>
+            <xacro:general_purpose_io prefix="${arm_prefix}vy" command_interface="cartesian_velocity" index="1"/>
+            <xacro:general_purpose_io prefix="${arm_prefix}vz" command_interface="cartesian_velocity" index="2"/>
+            <xacro:general_purpose_io prefix="${arm_prefix}wx" command_interface="cartesian_velocity" index="3"/>
+            <xacro:general_purpose_io prefix="${arm_prefix}wy" command_interface="cartesian_velocity" index="4"/>
+            <xacro:general_purpose_io prefix="${arm_prefix}wz" command_interface="cartesian_velocity" index="5"/>
 
-          <!-- Cartesian pose interfaces, in total 16 interfaces -->
-          <xacro:pose_loop name_stem="${arm_prefix}" i="0"/>
+            <!-- Cartesian pose interfaces, in total 16 interfaces -->
+            <xacro:pose_loop name_stem="${arm_prefix}" i="0"/>
 
-          <!-- Elbow command interfaces -->
-          <xacro:general_purpose_io prefix="${arm_prefix}joint_3_position" command_interface="elbow_command" index="0"/>
-          <xacro:general_purpose_io prefix="${arm_prefix}joint_4_sign" command_interface="elbow_command" index="1"/>
+            <!-- Elbow command interfaces -->
+            <xacro:general_purpose_io prefix="${arm_prefix}joint_3_position" command_interface="elbow_command" index="0"/>
+            <xacro:general_purpose_io prefix="${arm_prefix}joint_4_sign" command_interface="elbow_command" index="1"/>
+          </xacro:unless>
 
           <xacro:robot_loop i="${i+1}"/>
         </xacro:unless>

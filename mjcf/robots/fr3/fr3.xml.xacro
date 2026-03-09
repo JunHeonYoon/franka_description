@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mujoco xmlns:xacro="http://www.ros.org/wiki/xacro" model="fr3">
 
-    <!-- ================================================================ -->
-    <!--  fr3.xml.xacro                                                    -->
-    <!--  FR3 로봇의 최상위 MuJoCo 파일.                                    -->
-    <!-- ================================================================ -->
-
     <!-- ── xacro includes ── -->
     <xacro:include filename="$(find franka_description)/mjcf/robots/common/franka_robot.xml.xacro" />
     <xacro:include filename="$(find franka_description)/mjcf/robots/common/franka_arm.xml.xacro" />
@@ -23,8 +18,8 @@
     <xacro:arg name="rpy"            default="0 0 0" />
     <xacro:arg name="hand"           default="true" />
     <xacro:arg name="ee_id"          default="franka_hand" />
-    <xacro:arg name="xyz_ee"         default="0 0 0.107" />
-    <xacro:arg name="rpy_ee"         default="0 0 -0.7853981633974483" />
+    <xacro:arg name="xyz_ee"         default="0 0 0" />
+    <xacro:arg name="rpy_ee"         default="0 0 ${-pi/4}" />
     <xacro:arg name="tcp_xyz"        default="0 0 0.1034" />
     <xacro:arg name="tcp_rpy"        default="0 0 0" />
     <xacro:arg name="fix_finger"     default="false" />

@@ -48,9 +48,6 @@
   <xacro:arg name="ros2_control" default="false" />
   <xacro:arg name="use_mujoco" default="false" />
 
-  <!-- MuJoCo scene XML string (generated from mujoco_scene_xacro in the launch file) -->
-  <xacro:arg name="mujoco_scene_xacro_path" default="" />
-
   <!-- IP address or hostname of the robot" -->
   <xacro:arg name="robot_ip" default="" />
 
@@ -91,7 +88,6 @@
                       with_sc="$(arg with_sc)"
                       ros2_control="$(arg ros2_control)"
                       use_mujoco="$(arg use_mujoco)"
-                      mujoco_scene_xacro_path="$(arg mujoco_scene_xacro_path)"
                       robot_ip="$(arg robot_ip)"
                       use_fake_hardware="$(arg use_fake_hardware)"
                       fake_sensor_commands="$(arg fake_sensor_commands)"

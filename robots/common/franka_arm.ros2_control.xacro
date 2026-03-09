@@ -11,16 +11,7 @@
                  gazebo_effort:=false
                  arm_prefix:=''
                  no_prefix:='false'
-                 use_mujoco:=false
-                 connected_to:='base'
-                 xyz:='0 0 0'
-                 rpy:='0 0 0'
-                 ee_id:=none
-                 xyz_ee:='0 0 0'
-                 rpy_ee:='0 0 0'
-                 tcp_xyz:='0 0 0'
-                 tcp_rpy:='0 0 0'
-                 mujoco_scene_xacro_path:=''">
+                 use_mujoco:=false">
 
     <xacro:property name="arm_prefix_modified" value="${'' if arm_prefix == '' else arm_prefix + '_'}" />
     <ros2_control name="${arm_prefix_modified}FrankaHardwareInterface" type="system">
@@ -40,21 +31,8 @@
           </xacro:if>
 
           <xacro:if value="${use_mujoco}">
-            <plugin>franka_mujoco/FrankaMujocoSystem</plugin>
-            <param name="mujoco_scene_xacro_path">$(arg mujoco_scene_xacro_path)</param>
-            <param name="enable_viewer">true</param>
-            <param name="arm_id">${arm_id}</param>
-            <param name="arm_prefix">${arm_prefix}</param>
-            <param name="no_prefix">${no_prefix}</param>
-            <param name="connected_to">${connected_to}</param>
-            <param name="xyz">${xyz}</param>
-            <param name="rpy">${rpy}</param>
-            <param name="hand">${hand}</param>
-            <param name="ee_id">${ee_id}</param>
-            <param name="xyz_ee">${xyz_ee}</param>
-            <param name="rpy_ee">${rpy_ee}</param>
-            <param name="tcp_xyz">${tcp_xyz}</param>
-            <param name="tcp_rpy">${tcp_rpy}</param>
+            <plugin>mujoco_ros_hardware/MujocoHardwareInterface</plugin>
+            <param name="robot_type">franka</param>
           </xacro:if>
 
           <xacro:if value="${use_fake_hardware == 0 and gazebo == 0 and use_mujoco == 0}">
