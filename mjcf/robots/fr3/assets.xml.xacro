@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Shared FR3 arm-only assets for MJCF scenes. -->
+    <xacro:macro name="fr3_assets" params="arm_id:=fr3">
+        <material class="${arm_id}" name="black"        rgba=".2 .2 .2 1"/>
+        <material class="${arm_id}" name="white"        rgba="1 1 1 1"/>
+        <material class="${arm_id}" name="off_white"    rgba="0.901961 0.921569 0.929412 1"/>
+        <material class="${arm_id}" name="red"          rgba="1 0.072272 0.039546 1"/>
+        <material class="${arm_id}" name="gray"         rgba="0.863156 0.863156 0.863157 1"/>
+        <material class="${arm_id}" name="button_green" rgba="0.102241 0.571125 0.102242 1"/>
+        <material class="${arm_id}" name="button_red"   rgba="0.520996 0.008023 0.013702 1"/>
+        <material class="${arm_id}" name="button_blue"  rgba="0.024157 0.445201 0.737911 1"/>
+
+        <mesh name="link0_0" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link0_0.obj"/>
+        <mesh name="link0_1" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link0_1.obj"/>
+        <mesh name="link0_2" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link0_2.obj"/>
+        <mesh name="link0_3" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link0_3.obj"/>
+        <mesh name="link0_4" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link0_4.obj"/>
+        <mesh name="link0_5" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link0_5.obj"/>
+        <mesh name="link0_6" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link0_6.obj"/>
+        <mesh name="link1_0" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link1.obj"/>
+        <mesh name="link2_0" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link2.obj"/>
+        <mesh name="link3_0" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link3_0.obj"/>
+        <mesh name="link3_1" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link3_1.obj"/>
+        <mesh name="link4_0" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link4_0.obj"/>
+        <mesh name="link4_1" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link4_1.obj"/>
+        <mesh name="link5_0" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link5_0.obj"/>
+        <mesh name="link5_1" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link5_1.obj"/>
+        <mesh name="link5_2" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link5_2.obj"/>
+        <mesh name="link6_0" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link6_0.obj"/>
+        <mesh name="link6_1" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link6_1.obj"/>
+        <mesh name="link6_2" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link6_2.obj"/>
+        <mesh name="link6_3" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link6_3.obj"/>
+        <mesh name="link6_4" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link6_4.obj"/>
+        <mesh name="link6_5" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link6_5.obj"/>
+        <mesh name="link6_6" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link6_6.obj"/>
+        <mesh name="link6_7" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link6_7.obj"/>
+        <mesh name="link7_0" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link7_0.obj"/>
+        <mesh name="link7_1" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link7_1.obj"/>
+        <mesh name="link7_2" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link7_2.obj"/>
+        <mesh name="link7_3" file="$(find franka_description)/meshes/robot_arms/fr3/visual/link7_3.obj"/>
+
+        <mesh name="link0_coll" file="$(find franka_description)/meshes/robot_arms/fr3/collision/link0.stl"/>
+        <mesh name="link1_coll" file="$(find franka_description)/meshes/robot_arms/fr3/collision/link1.stl"/>
+        <mesh name="link2_coll" file="$(find franka_description)/meshes/robot_arms/fr3/collision/link2.stl"/>
+        <mesh name="link3_coll" file="$(find franka_description)/meshes/robot_arms/fr3/collision/link3.stl"/>
+        <mesh name="link4_coll" file="$(find franka_description)/meshes/robot_arms/fr3/collision/link4.stl"/>
+        <mesh name="link5_coll" file="$(find franka_description)/meshes/robot_arms/fr3/collision/link5.stl"/>
+        <mesh name="link6_coll" file="$(find franka_description)/meshes/robot_arms/fr3/collision/link6.stl"/>
+        <mesh name="link7_coll" file="$(find franka_description)/meshes/robot_arms/fr3/collision/link7.stl"/>
+    </xacro:macro>
+</mujoco>

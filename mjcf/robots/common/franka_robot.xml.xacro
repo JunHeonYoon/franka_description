@@ -40,7 +40,8 @@
                          link7_vis_mesh_materials:='[]'
                          hand_vis_mesh_materials:='[]'
                          finger_vis_mesh_materials:='[]'
-                         ee_vis_mesh_materials:='[]'">
+                         ee_vis_mesh_materials:='[]'
+                         **cam_body">
 
         <xacro:franka_arm
             arm_id="${arm_id}"
@@ -84,7 +85,12 @@
                         hand_vis_mesh_indices="${hand_vis_mesh_indices}"
                         finger_vis_mesh_indices="${finger_vis_mesh_indices}"
                         hand_vis_mesh_materials="${hand_vis_mesh_materials}"
-                        finger_vis_mesh_materials="${finger_vis_mesh_materials}" />
+                        finger_vis_mesh_materials="${finger_vis_mesh_materials}">
+                        <!-- pass cam_body block through into the hand body -->
+                        <cam_body>
+                            <xacro:insert_block name="cam_body" />
+                        </cam_body>
+                    </xacro:franka_hand>
                 </xacro:if>
                 <!-- generic single-link EE -->
                 <xacro:if value="${hand and ee_id != 'none' and ee_id != 'franka_hand'}">
@@ -100,6 +106,10 @@
                         ee_vis_mesh_indices="${ee_vis_mesh_indices}"
                         ee_vis_mesh_materials="${ee_vis_mesh_materials}" />
                 </xacro:if>
+                <!-- hand=false: inject cam_body at link8 level -->
+                <xacro:unless value="${hand}">
+                    <xacro:insert_block name="cam_body" />
+                </xacro:unless>
             </ee_body>
         </xacro:franka_arm>
 

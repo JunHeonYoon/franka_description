@@ -117,7 +117,9 @@
                                 hand_vis_mesh_indices="${hand_vis_mesh_indices}"
                                 finger_vis_mesh_indices="${finger_vis_mesh_indices}"
                                 hand_vis_mesh_materials="${hand_vis_mesh_materials}"
-                                finger_vis_mesh_materials="${finger_vis_mesh_materials}" />
+                                finger_vis_mesh_materials="${finger_vis_mesh_materials}">
+                                <cam_body/>
+                            </xacro:franka_hand>
                         </xacro:if>
                         <!-- generic single-link EE -->
                         <xacro:if value="${hand and ee_id != 'none' and ee_id != 'franka_hand'}">

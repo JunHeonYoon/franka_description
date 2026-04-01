@@ -4,8 +4,8 @@
 
     <!-- Caution: 'connected_to' do not adapt to MuJoCo, this macro have to put correctly under desired "connected" body -->
     <xacro:macro name="franka_hand"
-                params="arm_id 
-                        arm_prefix:='' 
+                params="arm_id
+                        arm_prefix:=''
                         ee_inertials
                         rpy_ee:='0 0 0'
                         xyz_ee:='0 0 0'
@@ -15,7 +15,8 @@
                         hand_vis_mesh_indices:='[0]'
                         finger_vis_mesh_indices:='[0]'
                         hand_vis_mesh_materials:='[]'
-                        finger_vis_mesh_materials:='[]'">
+                        finger_vis_mesh_materials:='[]'
+                        **cam_body">
 
         <xacro:property name="ee_prefix" default="robot_" />
         <xacro:unless value="${arm_id == ''}">
@@ -66,6 +67,9 @@
                 <geom type="box" size="0.003 0.002 0.0035" pos="-0.0055 0.002 0.0395"/>
 
             </body> <!-- rightfinger -->
+
+            <!-- Camera body injected by caller (e.g. realsense_d435i_mjcf) -->
+            <xacro:insert_block name="cam_body" />
 
         </body> <!-- hand -->
 

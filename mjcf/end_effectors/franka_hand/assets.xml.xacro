@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Shared Franka hand assets for MJCF scenes. -->
+    <xacro:macro name="franka_hand_assets" params="">
+        <mesh name="hand_0"   file="$(find franka_description)/meshes/robot_ee/franka_hand_white/visual/hand_0.obj"/>
+        <mesh name="hand_1"   file="$(find franka_description)/meshes/robot_ee/franka_hand_white/visual/hand_1.obj"/>
+        <mesh name="hand_2"   file="$(find franka_description)/meshes/robot_ee/franka_hand_white/visual/hand_2.obj"/>
+        <mesh name="hand_3"   file="$(find franka_description)/meshes/robot_ee/franka_hand_white/visual/hand_3.obj"/>
+        <mesh name="hand_4"   file="$(find franka_description)/meshes/robot_ee/franka_hand_white/visual/hand_4.obj"/>
+        <mesh name="finger_0" file="$(find franka_description)/meshes/robot_ee/franka_hand_white/visual/finger_0.obj"/>
+        <mesh name="finger_1" file="$(find franka_description)/meshes/robot_ee/franka_hand_white/visual/finger_1.obj"/>
+
+        <mesh name="hand_coll" file="$(find franka_description)/meshes/robot_ee/franka_hand_white/collision/hand.stl"/>
+    </xacro:macro>
+</mujoco>
