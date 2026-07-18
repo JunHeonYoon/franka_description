@@ -14,6 +14,7 @@
                          tcp_xyz:='0 0 0'
                          tcp_rpy:='0 0 0'
                          hand:=true
+                         fix_finger:=false
                          ee_id:=none
                          special_connection:=''
                          no_prefix:=false
@@ -82,6 +83,7 @@
                         rpy_ee="${rpy_ee}"
                         tcp_xyz="${tcp_xyz}"
                         tcp_rpy="${tcp_rpy}"
+                        fix_finger="${fix_finger}"
                         hand_vis_mesh_indices="${hand_vis_mesh_indices}"
                         finger_vis_mesh_indices="${finger_vis_mesh_indices}"
                         hand_vis_mesh_materials="${hand_vis_mesh_materials}"

@@ -76,34 +76,19 @@
   <!-- xyz:    Position of the center of the capsule/cylinder      -->
   <!-- direction: One of { x, y, z, -x, -y, -z }                   -->
   <!-- =========================================================== -->
+  <!-- Single <capsule> primitive (pinocchio/coal parse it directly);
+       historically a cylinder + two cap spheres. -->
   <xacro:macro name="collision_capsule" params="radius length xyz:='0 0 0' direction:='z'">
     <xacro:property name="r" value="${pi/2.0 if 'y' in direction else 0}" />
     <xacro:property name="p" value="${pi/2.0 if 'x' in direction else 0}" />
-    <xacro:property name="y" value="0" />
     <xacro:property name="x" value="${xyz.split(' ')[0]}" />
     <xacro:property name="y" value="${xyz.split(' ')[1]}" />
     <xacro:property name="z" value="${xyz.split(' ')[2]}" />
-    <!-- Sphere center offsets from center of cylinder -->
-    <xacro:property name="sx" value="${length / 2.0 if 'x' in direction else 0}" />
-    <xacro:property name="sy" value="${length / 2.0 if 'y' in direction else 0}" />
-    <xacro:property name="sz" value="${length / 2.0 if 'z' in direction else 0}" />
 
     <collision>
-      <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${y}"/>
+      <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} 0"/>
       <geometry>
-        <cylinder radius="${radius}" length="${length}" />
-      </geometry>
-    </collision>
-    <collision>
-      <origin xyz="${x+sx} ${y+sy} ${z+sz}" />
-      <geometry>
-        <sphere radius="${radius}" />
-      </geometry>
-    </collision>
-    <collision>
-      <origin xyz="${x-sx} ${y-sy} ${z-sz}" />
-      <geometry>
-        <sphere radius="${radius}" />
+        <capsule radius="${radius}" length="${length}" />
       </geometry>
     </collision>
   </xacro:macro>

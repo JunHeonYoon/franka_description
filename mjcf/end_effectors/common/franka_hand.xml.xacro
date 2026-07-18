@@ -12,6 +12,7 @@
                         tcp_xyz:='0 0 0.1034'
                         tcp_rpy:='0 0 0'
                         no_prefix:=false
+                        fix_finger:=false
                         hand_vis_mesh_indices:='[0]'
                         finger_vis_mesh_indices:='[0]'
                         hand_vis_mesh_materials:='[]'
@@ -36,7 +37,9 @@
 
             <!-- leftfinger body -->
             <body name="${ee_prefix}leftfinger" pos="0 0 0.0584" euler="0 0 0" gravcomp="1">
-                <joint name="${ee_prefix}finger_joint1" class="finger" />
+                <xacro:unless value="${fix_finger}">
+                    <joint name="${ee_prefix}finger_joint1" class="finger" />
+                </xacro:unless>
                 <xacro:ee-inertial name="leftfinger" />
 
                 <!-- Visual mesh geoms -->
@@ -53,7 +56,9 @@
 
             <!-- rightfinger body -->
             <body name="${ee_prefix}rightfinger" pos="0 0 0.0584" euler="0 0 ${pi}" gravcomp="1">
-                <joint name="${ee_prefix}finger_joint2" class="finger" />
+                <xacro:unless value="${fix_finger}">
+                    <joint name="${ee_prefix}finger_joint2" class="finger" />
+                </xacro:unless>
                 <xacro:ee-inertial name="rightfinger" />
 
                 <!-- Visual mesh geoms -->
